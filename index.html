@@ -4,132 +4,281 @@
 <meta charset="UTF-8">
 <title>DMSERVICESCI - Accueil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DMSERVICESCI - E-commerce moderne, découvrez nos produits et contactez-nous via WhatsApp !">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body,html{font-family:'Roboto',sans-serif;background:#f5f5f5;scroll-behavior:smooth;}
-a{text-decoration:none;}
-header{background:#4CAF50;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;}
+:root{
+  --primary:#4CAF50;
+  --secondary:#FFD700;
+  --text:#ffffff;
+  --bg:#f5f5f5;
+  --header-bg:var(--primary);
+  --chat-bg:#25D366;
+}
+body{
+  font-family:'Roboto',sans-serif;
+  background:var(--bg);
+  color:#333;
+  scroll-behavior:smooth;
+  transition: background 0.3s, color 0.3s;
+  margin:0;
+}
+a{text-decoration:none;color:inherit;}
+/* Header */
+header{
+  background:var(--header-bg);
+  color:var(--text);
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  transition:all 0.3s;
+}
+header.shrink{padding:10px 20px;box-shadow:0 2px 10px rgba(0,0,0,0.2);}
 header h1{font-size:24px;}
-nav{display:flex;gap:15px;}
-nav a{color:white;font-weight:600;position:relative;transition:0.3s;}
-nav a::after{content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:#FFD700;transition:0.3s;}
-nav a:hover::after{width:100%;}
 .nav-toggle{display:none;flex-direction:column;gap:4px;cursor:pointer;}
-.nav-toggle span{width:25px;height:3px;background:white;display:block;}
+.nav-toggle span{width:25px;height:3px;background:white;display:block;transition:0.3s;}
+nav{display:flex;gap:15px;}
+nav a{color:var(--text);font-weight:600;position:relative;transition:0.3s;}
+nav a::after{content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:var(--secondary);transition:0.3s;}
+nav a:hover::after{width:100%;}
 @media(max-width:768px){
-  nav{position:absolute;top:60px;left:0;right:0;background:#4CAF50;flex-direction:column;display:none;}
+  nav{position:absolute;top:60px;left:0;right:0;background:var(--primary);flex-direction:column;display:none;transition:transform 0.3s ease;}
   nav.active{display:flex;}
   .nav-toggle{display:flex;}
 }
+/* Slider */
 .slider{position:relative;overflow:hidden;margin:20px auto;border-radius:10px;max-width:900px;height:350px;}
 .slides{position:relative;height:100%;}
 .slide{position:absolute;width:100%;height:100%;background-size:cover;background-position:center;opacity:0;transition:opacity 1s ease, transform 1s ease;}
 .slide.active{opacity:1;transform:scale(1.05);}
-.slide-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;color:white;font-size:32px;font-weight:bold;text-shadow:2px 2px 10px rgba(0,0,0,0.7);opacity:0;transition:opacity 1s ease;}
+.slide-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;color:white;font-size:32px;font-weight:bold;text-shadow:2px 2px 10px rgba(0,0,0,0.7);opacity:0;transform:translateY(20px);transition:opacity 1s ease, transform 1s ease;background:rgba(0,0,0,0.3);padding:10px 20px;border-radius:10px;text-align:center;}
+.slide.active .slide-overlay{opacity:1;transform:translateY(0);}
+.slider-nav{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:8px;}
+.slider-nav span{width:12px;height:12px;border-radius:50%;background:white;opacity:0.5;cursor:pointer;transition:opacity 0.3s;}
+.slider-nav span.active{opacity:1;background:var(--secondary);}
+.slider-arrows{position:absolute;top:50%;width:100%;display:flex;justify-content:space-between;transform:translateY(-50%);padding:0 20px;}
+.slider-arrows div{background:rgba(0,0,0,0.5);color:white;padding:8px 12px;border-radius:50%;cursor:pointer;user-select:none;transition:background 0.3s;}
+.slider-arrows div:hover{background:var(--secondary);transform:scale(1.1);}
+/* Sections */
+section{padding:50px 20px;max-width:1100px;margin:auto;}
+.scroll-reveal{opacity:0;transform:translateY(30px);transition:all 0.8s ease;}
+.scroll-reveal.active{opacity:1;transform:translateY(0);}
+h2{text-align:center;margin-bottom:30px;}
+
+/* Produits */
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+.product-card{background:white;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:transform 0.3s;}
+.product-card:hover{transform:scale(1.05);}
+.product-card img{width:100%;display:block;}
+.product-card .info{padding:10px;text-align:center;}
+.product-card button{margin-top:10px;padding:10px 15px;border:none;border-radius:50px;background:var(--primary);color:white;cursor:pointer;transition:transform 0.3s;}
+.product-card button:hover{transform:scale(1.05);}
+
+/* Témoignages */
+.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.testimonial-card{background:white;border-radius:10px;padding:20px;box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:transform 0.3s;}
+.testimonial-card:hover{transform:scale(1.03);}
+.stars{color:var(--secondary);}
+
+/* Newsletter */
+.newsletter{background:var(--primary);color:white;text-align:center;padding:40px 20px;border-radius:10px;margin:40px 0;}
+.newsletter input{padding:10px;width:70%;border:none;border-radius:50px;margin-right:10px;}
+.newsletter button{padding:10px 20px;border:none;border-radius:50px;background:var(--secondary);color:#000;cursor:pointer;transition:transform 0.3s;}
+.newsletter button:hover{transform:scale(1.05);}
+
+/* Chat */
+#chat-popup{position:fixed;bottom:20px;right:20px;z-index:9999;}
+#chat-btn{background:var(--chat-bg);color:white;border:none;padding:15px 20px;border-radius:50px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);font-weight:bold;transition:transform 0.3s;}
+#chat-btn:hover{transform:scale(1.1);}
+#chat-box{display:none;background:white;width:300px;border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,0.3);padding:15px;margin-top:10px;animation:fadeIn 0.3s;}
+#chat-box textarea{width:100%;height:80px;padding:10px;border-radius:10px;border:1px solid #ddd;}
+#chat-box button{margin-top:10px;width:100%;padding:10px;background:var(--chat-bg);color:white;border:none;border-radius:50px;cursor:pointer;font-weight:bold;transition:transform 0.3s;}
+#chat-box button:hover{transform:scale(1.05);}
+
+/* Footer */
 footer{background:#333;color:white;text-align:center;padding:15px 0;margin-top:40px;}
 footer a{color:white;margin:0 10px;}
-footer a:hover{color:#FFD700;}
-#chat-popup{position:fixed;bottom:20px;right:20px;z-index:9999;}
-#chat-btn{background:#25D366;color:white;border:none;padding:15px 20px;border-radius:50px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);font-weight:bold;}
-#chat-box{display:none;background:white;width:300px;border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,0.3);padding:15px;margin-top:10px;}
-#chat-box textarea{width:100%;height:80px;padding:10px;border-radius:10px;border:1px solid #ddd;}
-#chat-box button{margin-top:10px;width:100%;padding:10px;background:#25D366;color:white;border:none;border-radius:50px;cursor:pointer;font-weight:bold;}
+footer a:hover{color:var(--secondary);}
+
+/* Dark mode */
+body.dark{
+  --bg:#1e1e1e;
+  --text:#f5f5f5;
+  --primary:#2E7D32;
+  --secondary:#FFD700;
+  --header-bg:#2E7D32;
+}
+body.dark header{background:var(--header-bg);}
 </style>
 </head>
 <body>
 
-<header>
+<header id="header">
 <h1>DMSERVICESCI</h1>
+<div>
+<button id="darkModeBtn" style="margin-right:15px;padding:5px 10px;border-radius:5px;cursor:pointer;">🌙</button>
 <div class="nav-toggle" onclick="toggleNav()"><span></span><span></span><span></span></div>
+</div>
 <nav id="navMenu">
-<a href="index.html">Accueil</a>
-<a href="produits.html">Produits</a>
-<a href="panier.html">Panier</a>
-<a href="yango.html">Yango</a>
-<a href="contact.html">Contact</a>
+<a href="#produits">Produits</a>
+<a href="#temoignages">Témoignages</a>
+<a href="#newsletter">Newsletter</a>
+<a href="#contact">Contact</a>
 </nav>
 </header>
 
-<div class="slider">
+<!-- Slider -->
+<div class="slider scroll-reveal">
   <div class="slides">
-
-    <div class="slide active" style="background-image:url('images/promo1.jpg')">
+    <div class="slide active" style="background-image:url('images/promo1.jpg')" aria-label="Promo 1">
       <div class="slide-overlay">Bienvenue chez DMSERVICESCI</div>
     </div>
-
-    <div class="slide" style="background-image:url('images/promo2.jpg')">
+    <div class="slide" style="background-image:url('images/promo2.jpg')" aria-label="Promo 2">
       <div class="slide-overlay">Découvrez nos produits</div>
     </div>
-
-    <div class="slide" style="background-image:url('images/promo3.jpg')">
+    <div class="slide" style="background-image:url('images/promo3.jpg')" aria-label="Promo 3">
       <div class="slide-overlay">Commandez facilement</div>
     </div>
-
   </div>
+  <div class="slider-arrows">
+    <div onclick="prevSlide()">&#10094;</div>
+    <div onclick="nextSlide()">&#10095;</div>
+  </div>
+  <div class="slider-nav"></div>
 </div>
 
-
-<div id="chat-popup">
-  <button id="chat-btn">💬 Chat</button>
-  <div id="chat-box">
-    <h3 style="text-align:center;">Envoyez un message</h3>
-    <textarea id="chat-message" placeholder="Écrivez votre message..."></textarea>
-    <button onclick="envoyerWhatsApp()">Envoyer via WhatsApp</button>
+<!-- Produits -->
+<section id="produits" class="scroll-reveal">
+<h2>Nos Produits</h2>
+<div class="products">
+  <div class="product-card">
+    <img src="images/produit1.jpg" alt="Produit 1">
+    <div class="info">
+      <h3>Produit 1</h3>
+      <p>50 000 CFA</p>
+      <button>Ajouter au panier</button>
+    </div>
+  </div>
+  <div class="product-card">
+    <img src="images/produit2.jpg" alt="Produit 2">
+    <div class="info">
+      <h3>Produit 2</h3>
+      <p>75 000 CFA</p>
+      <button>Ajouter au panier</button>
+    </div>
+  </div>
+  <div class="product-card">
+    <img src="images/produit3.jpg" alt="Produit 3">
+    <div class="info">
+      <h3>Produit 3</h3>
+      <p>100 000 CFA</p>
+      <button>Ajouter au panier</button>
+    </div>
   </div>
 </div>
+</section>
 
-<footer>
-&copy; 2026 DMSERVICESCI. Tous droits réservés.
+<!-- Témoignages -->
+<section id="temoignages" class="scroll-reveal">
+<h2>Témoignages</h2>
+<div class="testimonials">
+  <div class="testimonial-card">
+    <p>"Excellent service et produits de qualité!"</p>
+    <p class="stars">★★★★★</p>
+    <h4>- Marie</h4>
+  </div>
+  <div class="testimonial-card">
+    <p>"Livraison rapide et service client très réactif."</p>
+    <p class="stars">★★★★☆</p>
+    <h4>- Paul</h4>
+  </div>
+  <div class="testimonial-card">
+    <p>"Je recommande DMSERVICESCI à tout le monde!"</p>
+    <p class="stars">★★★★★</p>
+    <h4>- Awa</h4>
+  </div>
+</div>
+</section>
+
+<!-- Newsletter -->
+<section id="newsletter" class="newsletter scroll-reveal">
+<h2>Inscrivez-vous à notre Newsletter</h2>
+<form onsubmit="return subscribeNewsletter()">
+<input type="email" id="newsletterEmail" placeholder="Votre email..." required>
+<button type="submit">S'abonner</button>
+</form>
+</section>
+
+<!-- Chat -->
+<div id="chat-popup" class="scroll-reveal">
+<button id="chat-btn">💬 Chat</button>
+<div id="chat-box">
+<h3 style="text-align:center;">Bonjour ! 👋 Comment pouvons-nous vous aider ?</h3>
+<textarea id="chat-message" placeholder="Écrivez votre message..."></textarea>
+<button onclick="envoyerWhatsApp()">Envoyer via WhatsApp</button>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="scroll-reveal">
+<p>&copy; 2026 DMSERVICESCI. Tous droits réservés.</p>
+<p>
+<a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+</p>
 </footer>
 
-<script>
-/* Slider */
-let index = 0;
-const slides = document.querySelectorAll('.slide');
-
-function showSlide() {
-  slides.forEach((s, i) => {
-    s.classList.remove('active');
-    const overlay = s.querySelector('.slide-overlay');
-    overlay.style.opacity = 0;
-  });
-
-  const currentSlide = slides[index];
-  currentSlide.classList.add('active');
-
-  const overlay = currentSlide.querySelector('.slide-overlay');
-  overlay.style.opacity = 1;
-
-  index = (index + 1) % slides.length;
-}
-
-showSlide();
-setInterval(showSlide, 5000);
-
-/* Menu mobile */
-function toggleNav(){
-  document.getElementById('navMenu').classList.toggle('active');
-}
-
-/* Chat WhatsApp */
-const chatBtn = document.getElementById('chat-btn');
-const chatBox = document.getElementById('chat-box');
-
-chatBtn.addEventListener('click', () => {
-  chatBox.style.display = chatBox.style.display === 'none' ? 'block' : 'none';
+<script defer>
+// Slider
+let index=0;
+const slides=document.querySelectorAll('.slide');
+const navContainer=document.querySelector('.slider-nav');
+slides.forEach((s,i)=>{
+  const dot=document.createElement('span');
+  dot.addEventListener('click',()=>{index=i;showSlide();});
+  navContainer.appendChild(dot);
 });
+const navDots=navContainer.querySelectorAll('span');
+function showSlide(){slides.forEach((s,i)=>{s.classList.remove('active');navDots[i].classList.remove('active');});slides[index].classList.add('active');navDots[index].classList.add('active');}
+function nextSlide(){index=(index+1)%slides.length;showSlide();}
+function prevSlide(){index=(index-1+slides.length)%slides.length;showSlide();}
+setInterval(nextSlide,5000);
 
-function envoyerWhatsApp() {
-  const msg = document.getElementById('chat-message').value.trim();
-  if(msg === "") {
-    alert("Veuillez écrire un message.");
-    return;
-  }
-  window.open("https://wa.me/+2250596855775?text=" + encodeURIComponent(msg), "_blank");
-  document.getElementById('chat-message').value = "";
-  chatBox.style.display = 'none';
+// Menu mobile
+function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
+document.addEventListener('click',e=>{if(!e.target.closest('nav') && !e.target.closest('.nav-toggle')){document.getElementById('navMenu').classList.remove('active');}});
+
+// Chat WhatsApp
+const chatBtn=document.getElementById('chat-btn');
+const chatBox=document.getElementById('chat-box');
+chatBtn.addEventListener('click',()=>{chatBox.style.display=chatBox.style.display==='none'?'block':'none';});
+function envoyerWhatsApp(){
+  const msg=document.getElementById('chat-message').value.trim();
+  if(msg===""){alert("Veuillez écrire un message."); return;}
+  window.open("https://wa.me/+2250596855775?text="+encodeURIComponent(msg),"_blank");
+  document.getElementById('chat-message').value="";
+  chatBox.style.display='none';
 }
+
+// Header shrink
+window.addEventListener('scroll',()=>{const header=document.getElementById('header');if(window.scrollY>50) header.classList.add('shrink'); else header.classList.remove('shrink');});
+
+// Dark mode
+const darkBtn=document.getElementById('darkModeBtn');
+darkBtn.addEventListener('click',()=>{document.body.classList.toggle('dark');});
+
+// Scroll reveal
+const revealElements=document.querySelectorAll('.scroll-reveal');
+function scrollReveal(){const triggerBottom=window.innerHeight*0.85;revealElements.forEach(el=>{const top=el.getBoundingClientRect().top;if(top<triggerBottom) el.classList.add('active');});}
+window.addEventListener('scroll',scrollReveal);
+scrollReveal();
+
+// Newsletter
+function subscribeNewsletter(){const email=document.getElementById('newsletterEmail').value.trim();if(email===""){alert("Veuillez entrer un email valide");return false;}alert("Merci pour votre inscription !");document.getElementById('newsletterEmail').value="";return false;}
 </script>
+
 </body>
 </html>
