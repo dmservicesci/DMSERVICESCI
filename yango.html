@@ -1,69 +1,35 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>DMSERVICESCI - Yango</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body,html{font-family:'Roboto',sans-serif;background:#f5f5f5;}
-header{background:#4CAF50;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;}
-header h1{font-size:24px;}
-nav{display:flex;gap:15px;}
-nav a{color:white;font-weight:600;position:relative;transition:0.3s;}
-nav a::after{content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:#FFD700;transition:0.3s;}
-nav a:hover::after{width:100%;}
-.nav-toggle{display:none;flex-direction:column;gap:4px;cursor:pointer;}
-.nav-toggle span{width:25px;height:3px;background:white;display:block;}
-@media(max-width:768px){nav{position:absolute;top:60px;left:0;right:0;background:#4CAF50;flex-direction:column;display:none;} nav.active{display:flex;} .nav-toggle{display:flex;}}
-main{max-width:900px;margin:30px auto;padding:0 15px;min-height:70vh;display:flex;justify-content:center;align-items:center;flex-direction:column;background:url('yango-bg.jpg') no-repeat center center/cover;border-radius:15px;text-align:center;color:white;}
-main a{padding:15px 30px;background:#FFD700;color:#333;font-weight:bold;border-radius:50px;text-decoration:none;transition:0.3s;}
-main a:hover{background:#FFC107;transform:scale(1.05);}
-#chat-popup{position:fixed;bottom:20px;right:20px;z-index:9999;}
-#chat-btn{background:#25D366;color:white;border:none;padding:15px 20px;border-radius:50px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);font-weight:bold;}
-#chat-box{display:none;background:white;width:300px;border-radius:15px;box-shadow:0 4px 20px rgba(0,0,0,0.3);padding:15px;margin-top:10px;}
-#chat-box textarea{width:100%;height:80px;padding:10px;border-radius:10px;border:1px solid #ddd;}
-#chat-box button{margin-top:10px;width:100%;padding:10px;background:#25D366;color:white;border:none;border-radius:50px;cursor:pointer;font-weight:bold;}
-</style>
-</head>
-<body>
-
-<header>
-<h1>DMSERVICESCI</h1>
-<div class="nav-toggle" onclick="toggleNav()"><span></span><span></span><span></span></div>
-<nav id="navMenu">
-<a href="index.html">Accueil</a>
-<a href="produits.html">Produits</a>
-<a href="panier.html">Panier</a>
-<a href="yango.html">Yango</a>
-</nav>
-</header>
-
 <main>
-<h2>Accédez à notre boutique Yango</h2>
-<a href="https://buy.yango.com/store/dmshop" target="_blank">Voir les produits sur Yango</a>
+  <h2>Accédez à notre boutique Yango</h2>
+  <a href="https://buy.yango.com/store/dmshop" target="_blank" aria-label="Voir les produits sur Yango">Voir les produits sur Yango</a>
 </main>
 
-<div id="chat-popup">
-  <button id="chat-btn">💬 Chat</button>
-  <div id="chat-box">
-    <h3 style="text-align:center;">Envoyez un message</h3>
-    <textarea id="chat-message" placeholder="Écrivez votre message..."></textarea>
-    <button onclick="envoyerWhatsApp()">Envoyer via WhatsApp</button>
-  </div>
-</div>
+<style>
+main {
+  max-width:900px;
+  margin:30px auto;
+  padding:30px 15px;
+  min-height:70vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:url('yango-bg.jpg') no-repeat center center/cover;
+  border-radius:15px;
+  text-align:center;
+  color:white;
+  position:relative;
+}
 
-<footer>
-&copy; 2026 DMSERVICESCI. Tous droits réservés.
-</footer>
+/* Overlay sombre pour lisibilité du texte */
+main::after {
+  content:"";
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.4);
+  border-radius:15px;
+  z-index:0;
+}
 
-<script>
-function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
-const chatBtn = document.getElementById('chat-btn');
-const chatBox = document.getElementById('chat-box');
-chatBtn.addEventListener('click', ()=>{chatBox.style.display = chatBox.style.display==='none'?'block':'none';});
-function envoyerWhatsApp(){const msg=document.getElementById('chat-message').value.trim(); if(msg===""){alert("Veuillez écrire un message."); return;} window.open("https://wa.me/+2250596855775?text="+encodeURIComponent(msg),"_blank"); document.getElementById('chat-message').value=""; chatBox.style.display='none';}
-</script>
-</body>
-</html>
+main * { position:relative; z-index:1; }
+</style>
