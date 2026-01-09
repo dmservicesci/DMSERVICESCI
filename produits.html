@@ -33,7 +33,7 @@ nav{
   display:flex;
   gap:15px;
   position:relative;
-  z-index:10002; /* menu mobile au-dessus du panier */
+  z-index:10002;
 }
 nav a{
   color:white;text-decoration:none;font-weight:600;position:relative;
@@ -95,7 +95,7 @@ main{
   position:fixed;top:20px;right:20px;padding:10px 20px;
   background:white;border:2px solid var(--primary);border-radius:50px;
   cursor:pointer;font-weight:bold;color:var(--primary);display:flex;align-items:center;gap:10px;
-  z-index:10003; /* toujours au-dessus */
+  z-index:10003;
   transition:0.3s;
 }
 #miniCart:hover{background:var(--primary);color:white;}
@@ -105,7 +105,7 @@ main{
   position:fixed;top:0;right:-350px;width:320px;height:100%;background:white;
   box-shadow:-4px 0 20px rgba(0,0,0,0.2);padding:15px;
   transition:right 0.3s;display:flex;flex-direction:column;
-  z-index:999; /* sous le menu mobile et mini panier */
+  z-index:999;
 }
 #cartPanel.open{right:0;}
 #cartPanel h4{text-align:center;margin-bottom:15px;}
@@ -150,34 +150,34 @@ footer{text-align:center;padding:15px;background:#333;color:white;}
 </nav>
 </header>
 
-<div id="miniCart" onclick="toggleCartPanel()">🛒 <span id="cartCount">0</span> articles | <span id="cartTotalPrice">0€</span></div>
+<div id="miniCart" onclick="toggleCartPanel()">🛒 <span id="cartCount">0</span> articles | <span id="cartTotalPrice">0 CFA</span></div>
 
 <div id="cartPanel">
 <h4>Votre Panier</h4>
 <div id="cartItems"></div>
-<div id="cartTotal">Total : 0€</div>
+<div id="cartTotal">Total : 0 CFA</div>
 </div>
 
 <main>
 <div class="card">
   <img src="images/produit1.jpg" alt="Produit 1">
   <h3>Produit 1</h3>
-  <p>10€</p>
-  <button onclick="addToCart('Produit 1',10)">Ajouter au panier</button>
+  <p>10 000 CFA</p>
+  <button onclick="addToCart('Produit 1',10000)">Ajouter au panier</button>
 </div>
 
 <div class="card">
   <img src="images/produit2.jpg" alt="Produit 2">
   <h3>Produit 2</h3>
-  <p>20€</p>
-  <button onclick="addToCart('Produit 2',20)">Ajouter au panier</button>
+  <p>20 000 CFA</p>
+  <button onclick="addToCart('Produit 2',20000)">Ajouter au panier</button>
 </div>
 
 <div class="card">
   <img src="images/produit3.jpg" alt="Produit 3">
   <h3>Produit 3</h3>
-  <p>30€</p>
-  <button onclick="addToCart('Produit 3',30)">Ajouter au panier</button>
+  <p>30 000 CFA</p>
+  <button onclick="addToCart('Produit 3',30000)">Ajouter au panier</button>
 </div>
 </main>
 
@@ -186,17 +186,39 @@ footer{text-align:center;padding:15px;background:#333;color:white;}
 </footer>
 
 <script>
+function formatPrice(price){
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ") + ' CFA';
+}
+
 function toggleNav(){
   const nav = document.getElementById('navMenu');
+  const miniCart = document.getElementById('miniCart');
+
   nav.classList.toggle('active');
 
-  // Si le menu s'ouvre, on ferme le panier
   if(nav.classList.contains('active')){
     document.getElementById('cartPanel').classList.remove('open');
+    miniCart.style.zIndex = '1000';
+  } else {
+    miniCart.style.zIndex = '10003';
   }
 }
 
-/* Panier */
+function toggleCartPanel(){
+  const panel = document.getElementById('cartPanel');
+  const nav = document.getElementById('navMenu');
+  const miniCart = document.getElementById('miniCart');
+
+  panel.classList.toggle('open');
+
+  if(panel.classList.contains('open')){
+    nav.classList.remove('active');
+    miniCart.style.zIndex = '10003';
+  } else if(!nav.classList.contains('active')){
+    miniCart.style.zIndex = '10003';
+  }
+}
+
 function addToCart(name, price){
   let cart = JSON.parse(localStorage.getItem('cart') || '[]');
   let item = cart.find(i=>i.name===name);
@@ -220,19 +242,7 @@ function updateMiniCart(){
   let count = cart.reduce((a,i)=>a+i.qty,0);
   let total = cart.reduce((a,i)=>a+i.price*i.qty,0);
   document.getElementById('cartCount').textContent = count;
-  document.getElementById('cartTotalPrice').textContent = total + '€';
-}
-
-function toggleCartPanel(){
-  const panel = document.getElementById('cartPanel');
-  const nav = document.getElementById('navMenu');
-
-  panel.classList.toggle('open');
-
-  // Si le panier s'ouvre, on ferme le menu mobile
-  if(panel.classList.contains('open')){
-    nav.classList.remove('active');
-  }
+  document.getElementById('cartTotalPrice').textContent = formatPrice(total);
 }
 
 function renderCartPanel(){
@@ -245,7 +255,7 @@ function renderCartPanel(){
     let div = document.createElement('div');
     div.className='cart-item';
     div.innerHTML = `
-      <span>${item.name} (${item.price}€)</span>
+      <span>${item.name} (${formatPrice(item.price)})</span>
       <div>
         <button onclick="changeQty(${index},-1)">-</button>
         ${item.qty}
@@ -255,7 +265,7 @@ function renderCartPanel(){
     `;
     container.appendChild(div);
   });
-  document.getElementById('cartTotal').textContent='Total : '+total+'€';
+  document.getElementById('cartTotal').textContent='Total : '+formatPrice(total);
 }
 
 function changeQty(index, delta){
@@ -280,7 +290,7 @@ function flyBubble(button){
   const miniCart = document.getElementById('miniCart');
   const bubble = document.createElement('div');
   bubble.className='cart-bubble';
-  bubble.textContent='€';
+  bubble.textContent='CFA';
   document.body.appendChild(bubble);
 
   bubble.style.left = rect.left + rect.width/2 - 12 + 'px';
