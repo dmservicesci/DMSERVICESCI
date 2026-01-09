@@ -29,7 +29,12 @@ header{
 }
 header h1{font-size:24px;}
 
-nav{display:flex;gap:15px;}
+nav{
+  display:flex;
+  gap:15px;
+  position:relative;
+  z-index:10002; /* menu mobile au-dessus du panier */
+}
 nav a{
   color:white;text-decoration:none;font-weight:600;position:relative;
 }
@@ -43,8 +48,11 @@ nav a:hover::after{width:100%;}
 
 @media(max-width:768px){
   nav{
-    position:absolute;top:60px;left:0;right:0;background:var(--primary);
-    flex-direction:column;display:none;
+    position:absolute;
+    top:60px;left:0;right:0;
+    background:var(--primary);
+    flex-direction:column;
+    display:none;
   }
   nav.active{display:flex;}
   .nav-toggle{display:flex;}
@@ -87,7 +95,8 @@ main{
   position:fixed;top:20px;right:20px;padding:10px 20px;
   background:white;border:2px solid var(--primary);border-radius:50px;
   cursor:pointer;font-weight:bold;color:var(--primary);display:flex;align-items:center;gap:10px;
-  z-index:10000;transition:0.3s;
+  z-index:10003; /* toujours au-dessus */
+  transition:0.3s;
 }
 #miniCart:hover{background:var(--primary);color:white;}
 
@@ -95,7 +104,8 @@ main{
 #cartPanel{
   position:fixed;top:0;right:-350px;width:320px;height:100%;background:white;
   box-shadow:-4px 0 20px rgba(0,0,0,0.2);padding:15px;
-  transition:right 0.3s;z-index:10001;display:flex;flex-direction:column;
+  transition:right 0.3s;display:flex;flex-direction:column;
+  z-index:999; /* sous le menu mobile et mini panier */
 }
 #cartPanel.open{right:0;}
 #cartPanel h4{text-align:center;margin-bottom:15px;}
@@ -118,7 +128,7 @@ main{
   justify-content:center;
   font-size:12px;
   pointer-events:none;
-  z-index:10000;
+  z-index:10004;
   transition: transform 0.6s cubic-bezier(0.65,-0.6,0.25,1.4), opacity 0.6s;
 }
 
@@ -176,7 +186,15 @@ footer{text-align:center;padding:15px;background:#333;color:white;}
 </footer>
 
 <script>
-function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
+function toggleNav(){
+  const nav = document.getElementById('navMenu');
+  nav.classList.toggle('active');
+
+  // Si le menu s'ouvre, on ferme le panier
+  if(nav.classList.contains('active')){
+    document.getElementById('cartPanel').classList.remove('open');
+  }
+}
 
 /* Panier */
 function addToCart(name, price){
@@ -185,11 +203,9 @@ function addToCart(name, price){
   if(item) item.qty++; else cart.push({name, price, qty:1});
   localStorage.setItem('cart', JSON.stringify(cart));
   
-  // Mini panier et panel
   updateMiniCart();
   renderCartPanel();
   
-  // Animation carte
   const cardElement = Array.from(document.querySelectorAll('.card'))
     .find(card => card.querySelector('h3').textContent === name);
   if(cardElement){
@@ -199,7 +215,6 @@ function addToCart(name, price){
   }
 }
 
-/* Mini panier */
 function updateMiniCart(){
   let cart = JSON.parse(localStorage.getItem('cart') || '[]');
   let count = cart.reduce((a,i)=>a+i.qty,0);
@@ -208,9 +223,16 @@ function updateMiniCart(){
   document.getElementById('cartTotalPrice').textContent = total + '€';
 }
 
-/* Panier glissant */
 function toggleCartPanel(){
-  document.getElementById('cartPanel').classList.toggle('open');
+  const panel = document.getElementById('cartPanel');
+  const nav = document.getElementById('navMenu');
+
+  panel.classList.toggle('open');
+
+  // Si le panier s'ouvre, on ferme le menu mobile
+  if(panel.classList.contains('open')){
+    nav.classList.remove('active');
+  }
 }
 
 function renderCartPanel(){
@@ -236,7 +258,6 @@ function renderCartPanel(){
   document.getElementById('cartTotal').textContent='Total : '+total+'€';
 }
 
-/* Modifier quantité */
 function changeQty(index, delta){
   let cart = JSON.parse(localStorage.getItem('cart') || '[]');
   cart[index].qty += delta;
@@ -246,7 +267,6 @@ function changeQty(index, delta){
   renderCartPanel();
 }
 
-/* Supprimer article */
 function removeItem(index){
   let cart = JSON.parse(localStorage.getItem('cart') || '[]');
   cart.splice(index,1);
@@ -255,7 +275,6 @@ function removeItem(index){
   renderCartPanel();
 }
 
-/* Bulle animée */
 function flyBubble(button){
   const rect = button.getBoundingClientRect();
   const miniCart = document.getElementById('miniCart');
@@ -279,7 +298,6 @@ function flyBubble(button){
   setTimeout(()=>bubble.remove(),600);
 }
 
-/* Initialisation */
 window.addEventListener('load',()=>{
   updateMiniCart();
   renderCartPanel();
