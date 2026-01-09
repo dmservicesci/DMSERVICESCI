@@ -24,6 +24,8 @@ li{background:white;padding:10px 15px;margin-bottom:10px;border-radius:10px;box-
 button{padding:10px 15px;margin:5px;background:#4CAF50;color:white;border:none;border-radius:50px;cursor:pointer;transition:0.3s;}
 button:hover{background:#45A049;transform:scale(1.05);}
 #paypal-button-container{margin-top:15px;}
+.delete-btn{background:#FF4C4C;margin-left:10px;}
+.delete-btn:hover{background:#E04343;}
 </style>
 <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
 </head>
@@ -61,24 +63,46 @@ button:hover{background:#45A049;transform:scale(1.05);}
 
 <script>
 function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
+
+// Affichage du panier
 function afficherPanier(){
-  let panier=JSON.parse(localStorage.getItem('panier')||'[]');
-  let ul=document.getElementById('panier'); ul.innerHTML='';
-  let total=0;
+  let panier = JSON.parse(localStorage.getItem('panier') || '[]');
+  let ul = document.getElementById('panier'); 
+  ul.innerHTML = '';
+  let total = 0;
+
   panier.forEach((item,index)=>{
-    let li=document.createElement('li');
-    li.textContent=item.nom + " - " + item.prix + "€";
+    let li = document.createElement('li');
+
+    let nomPrix = document.createElement('span');
+    nomPrix.textContent = `${item.nom} - ${Number(item.prix).toFixed(2)}€`;
+
+    let delBtn = document.createElement('button');
+    delBtn.textContent = 'Supprimer';
+    delBtn.className = 'delete-btn';
+    delBtn.onclick = () => {
+      panier.splice(index,1);
+      localStorage.setItem('panier',JSON.stringify(panier));
+      afficherPanier();
+    };
+
+    li.appendChild(nomPrix);
+    li.appendChild(delBtn);
     ul.appendChild(li);
-    total+=item.prix;
+
+    total += Number(item.prix);
   });
-  document.getElementById('total').textContent=total;
+
+  document.getElementById('total').textContent = total.toFixed(2);
 }
 afficherPanier();
 
+// Commande WhatsApp
 function commanderWhatsApp(){
-  let panier=JSON.parse(localStorage.getItem('panier')||'[]');
-  if(panier.length===0){alert('Votre panier est vide.');return;}
-  let msg='Commande :\n'+panier.map(i=>i.nom+' - '+i.prix+'€').join('\n')+'\nTotal : '+panier.reduce((a,b)=>a+b.prix,0)+'€';
+  let panier = JSON.parse(localStorage.getItem('panier') || '[]');
+  if(panier.length === 0){alert('Votre panier est vide.'); return;}
+  let total = panier.reduce((a,b)=>a+Number(b.prix),0);
+  let msg = 'Commande :\n'+panier.map(i=>i.nom+' - '+Number(i.prix).toFixed(2)+'€').join('\n')+'\nTotal : '+total.toFixed(2)+'€';
   window.open('https://wa.me/+2250596855775?text='+encodeURIComponent(msg),'_blank');
 }
 
@@ -88,11 +112,18 @@ function commanderLygos(){alert('Redirection vers Lygos pour paiement.');}
 // PayPal
 paypal.Buttons({
   createOrder: function(data, actions){
-    let panier=JSON.parse(localStorage.getItem('panier')||'[]');
-    let total=panier.reduce((a,b)=>a+b.prix,0);
-    return actions.order.create({purchase_units:[{amount:{value:total}}]});
+    let panier = JSON.parse(localStorage.getItem('panier') || '[]');
+    if(panier.length === 0){alert('Votre panier est vide.'); return;}
+    let total = panier.reduce((a,b)=>a+Number(b.prix),0);
+    return actions.order.create({purchase_units:[{amount:{value:total.toFixed(2)}}]});
   },
-  onApprove:function(data,actions){return actions.order.capture().then(function(details){alert('Paiement effectué avec succès !'); localStorage.removeItem('panier'); afficherPanier();});}
+  onApprove:function(data, actions){
+    return actions.order.capture().then(function(details){
+      alert('Paiement effectué avec succès !');
+      localStorage.removeItem('panier');
+      afficherPanier();
+    });
+  }
 }).render('#paypal-button-container');
 </script>
 </body>
