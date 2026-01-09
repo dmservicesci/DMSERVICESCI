@@ -5,24 +5,36 @@
 <title>DMSERVICESCI - Produits</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
+:root{
+  --primary:#4CAF50;
+  --secondary:#FFD700;
+  --hover:#45A049;
+  --bg:#f5f5f5;
+  --shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
 *{margin:0;padding:0;box-sizing:border-box;}
-body,html{font-family:'Roboto',sans-serif;background:#f5f5f5;}
+body,html{font-family:'Roboto',sans-serif;background:var(--bg);}
 
 header{
-  background:#4CAF50;color:white;
+  background:var(--primary);
+  color:white;
   padding:15px 20px;
-  display:flex;justify-content:space-between;align-items:center;
-  position:sticky;top:0;z-index:1000;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;top:0;
+  z-index:1000;
 }
 header h1{font-size:24px;}
 
 nav{display:flex;gap:15px;}
-nav a{color:white;font-weight:600;position:relative;}
+nav a{
+  color:white;text-decoration:none;font-weight:600;position:relative;
+}
 nav a::after{
-  content:"";position:absolute;width:0;height:2px;
-  bottom:-4px;left:0;background:#FFD700;transition:0.3s;
+  content:"";position:absolute;width:0;height:2px;bottom:-3px;left:0;background:var(--secondary);transition:0.3s;
 }
 nav a:hover::after{width:100%;}
 
@@ -30,149 +42,248 @@ nav a:hover::after{width:100%;}
 .nav-toggle span{width:25px;height:3px;background:white;}
 
 @media(max-width:768px){
-  nav{position:absolute;top:60px;left:0;right:0;background:#4CAF50;flex-direction:column;display:none;}
+  nav{
+    position:absolute;top:60px;left:0;right:0;background:var(--primary);
+    flex-direction:column;display:none;
+  }
   nav.active{display:flex;}
   .nav-toggle{display:flex;}
 }
 
 main{
-  max-width:1000px;
-  margin:30px auto;
-  padding:0 15px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  max-width:1000px;margin:30px auto;padding:0 15px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;
 }
 
 .card{
-  background:white;
-  padding:15px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  transition:0.3s;
+  background:white;padding:15px;border-radius:12px;box-shadow:var(--shadow);
+  transition:0.3s, transform 0.5s, border-color 0.5s;
 }
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-}
-
-/* ✅ CORRECTION IMAGE */
-.card img{
-  width:100%;
-  height:200px;          /* hauteur fixe */
-  object-fit:cover;      /* remplit sans déformer */
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
+.card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.2);}
+.card img{width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
 .card h3{margin-bottom:5px;}
 .card p{font-weight:bold;margin-bottom:10px;}
-
 .card button{
-  width:100%;
-  padding:10px;
-  background:#4CAF50;
-  color:white;
-  border:none;
-  border-radius:50px;
-  cursor:pointer;
-  transition:0.3s;
+  width:100%;padding:10px;background:var(--primary);
+  color:white;border:none;border-radius:50px;cursor:pointer;transition:0.3s;
 }
-.card button:hover{
-  background:#45A049;
-  transform:scale(1.05);
+.card button:hover{background:var(--hover);transform:scale(1.05);}
+
+/* Animation ajout au panier */
+@keyframes cardBounce {
+  0% { transform: translateY(0); border-color: #ccc; }
+  30% { transform: translateY(-10px); border-color: var(--primary); }
+  60% { transform: translateY(5px); }
+  100% { transform: translateY(0); border-color: #ccc; }
+}
+.card.added {
+  animation: cardBounce 0.5s ease;
+  border: 2px solid var(--primary);
 }
 
-/* Popup */
-#popup{
+/* Mini panier fixe */
+#miniCart{
+  position:fixed;top:20px;right:20px;padding:10px 20px;
+  background:white;border:2px solid var(--primary);border-radius:50px;
+  cursor:pointer;font-weight:bold;color:var(--primary);display:flex;align-items:center;gap:10px;
+  z-index:10000;transition:0.3s;
+}
+#miniCart:hover{background:var(--primary);color:white;}
+
+/* Panier glissant */
+#cartPanel{
+  position:fixed;top:0;right:-350px;width:320px;height:100%;background:white;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.2);padding:15px;
+  transition:right 0.3s;z-index:10001;display:flex;flex-direction:column;
+}
+#cartPanel.open{right:0;}
+#cartPanel h4{text-align:center;margin-bottom:15px;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cart-item div{display:flex;align-items:center;gap:5px;}
+.cart-item button{border:none;border-radius:50%;width:25px;height:25px;cursor:pointer;font-weight:bold;color:white;background:var(--primary);}
+.cart-item button.remove{background:red;border-radius:5px;width:auto;padding:2px 6px;}
+#cartTotal{text-align:center;margin-top:auto;font-weight:bold;font-size:16px;}
+
+/* Bulle animée */
+.cart-bubble {
   position:fixed;
-  top:20px;right:20px;
-  background:#4CAF50;color:white;
-  padding:15px 20px;
-  border-radius:50px;
-  display:none;
-  opacity:0;
-  transition:opacity 0.5s;
-  z-index:9999;
-}
-#popup.show{display:block;opacity:1;}
-#popup.hide{opacity:0;}
-
-footer{
-  text-align:center;
-  padding:15px;
-  background:#333;
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  background:var(--primary);
   color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  pointer-events:none;
+  z-index:10000;
+  transition: transform 0.6s cubic-bezier(0.65,-0.6,0.25,1.4), opacity 0.6s;
 }
+
+/* Footer */
+footer{text-align:center;padding:15px;background:#333;color:white;}
 </style>
 </head>
-
 <body>
 
 <header>
 <h1>DMSERVICESCI</h1>
-<div class="nav-toggle" onclick="toggleNav()">
-  <span></span><span></span><span></span>
-</div>
+<div class="nav-toggle" onclick="toggleNav()"><span></span><span></span><span></span></div>
 <nav id="navMenu">
-<a href="index.html">Accueil</a>
-<a href="produits.html">Produits</a>
-<a href="panier.html">Panier</a>
-<a href="yango.html">Yango</a>
-<a href="contact.html">Contact</a>
+  <a href="index.html">Accueil</a>
+  <a href="produits.html">Produits</a>
+  <a href="panier.html">Panier</a>
+  <a href="yango.html">Yango</a>
+  <a href="contact.html">Contact</a>
 </nav>
 </header>
+
+<div id="miniCart" onclick="toggleCartPanel()">🛒 <span id="cartCount">0</span> articles | <span id="cartTotalPrice">0€</span></div>
+
+<div id="cartPanel">
+<h4>Votre Panier</h4>
+<div id="cartItems"></div>
+<div id="cartTotal">Total : 0€</div>
+</div>
+
 <main>
-  
 <div class="card">
   <img src="images/produit1.jpg" alt="Produit 1">
   <h3>Produit 1</h3>
   <p>10€</p>
-  <button onclick="ajouterPanier('Produit 1',10)">Ajouter au panier</button>
+  <button onclick="addToCart('Produit 1',10)">Ajouter au panier</button>
 </div>
 
 <div class="card">
   <img src="images/produit2.jpg" alt="Produit 2">
   <h3>Produit 2</h3>
   <p>20€</p>
-  <button onclick="ajouterPanier('Produit 2',20)">Ajouter au panier</button>
+  <button onclick="addToCart('Produit 2',20)">Ajouter au panier</button>
 </div>
 
 <div class="card">
   <img src="images/produit3.jpg" alt="Produit 3">
   <h3>Produit 3</h3>
   <p>30€</p>
-  <button onclick="ajouterPanier('Produit 3',30)">Ajouter au panier</button>
+  <button onclick="addToCart('Produit 3',30)">Ajouter au panier</button>
 </div>
 </main>
-
-<div id="popup">Produit ajouté au panier ✔</div>
 
 <footer>
 &copy; 2026 DMSERVICESCI. Tous droits réservés.
 </footer>
 
 <script>
-function toggleNav(){
-  document.getElementById('navMenu').classList.toggle('active');
+function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
+
+/* Panier */
+function addToCart(name, price){
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  let item = cart.find(i=>i.name===name);
+  if(item) item.qty++; else cart.push({name, price, qty:1});
+  localStorage.setItem('cart', JSON.stringify(cart));
+  
+  // Mini panier et panel
+  updateMiniCart();
+  renderCartPanel();
+  
+  // Animation carte
+  const cardElement = Array.from(document.querySelectorAll('.card'))
+    .find(card => card.querySelector('h3').textContent === name);
+  if(cardElement){
+    cardElement.classList.add('added');
+    setTimeout(()=>cardElement.classList.remove('added'),500);
+    flyBubble(cardElement.querySelector('button'));
+  }
 }
 
-function ajouterPanier(nom, prix){
-  let panier = JSON.parse(localStorage.getItem('panier') || '[]');
-  panier.push({nom, prix:Number(prix)});
-  localStorage.setItem('panier', JSON.stringify(panier));
-  showPopup();
+/* Mini panier */
+function updateMiniCart(){
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  let count = cart.reduce((a,i)=>a+i.qty,0);
+  let total = cart.reduce((a,i)=>a+i.price*i.qty,0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotalPrice').textContent = total + '€';
 }
 
-function showPopup(){
-  const popup = document.getElementById('popup');
-  popup.classList.remove('hide');
-  popup.classList.add('show');
-  setTimeout(()=>{
-    popup.classList.remove('show');
-    popup.classList.add('hide');
-  },1500);
+/* Panier glissant */
+function toggleCartPanel(){
+  document.getElementById('cartPanel').classList.toggle('open');
 }
+
+function renderCartPanel(){
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  const container = document.getElementById('cartItems');
+  container.innerHTML='';
+  let total =0;
+  cart.forEach((item,index)=>{
+    total += item.price*item.qty;
+    let div = document.createElement('div');
+    div.className='cart-item';
+    div.innerHTML = `
+      <span>${item.name} (${item.price}€)</span>
+      <div>
+        <button onclick="changeQty(${index},-1)">-</button>
+        ${item.qty}
+        <button onclick="changeQty(${index},1)">+</button>
+        <button class="remove" onclick="removeItem(${index})">x</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  document.getElementById('cartTotal').textContent='Total : '+total+'€';
+}
+
+/* Modifier quantité */
+function changeQty(index, delta){
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  cart[index].qty += delta;
+  if(cart[index].qty<1) cart[index].qty=1;
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateMiniCart();
+  renderCartPanel();
+}
+
+/* Supprimer article */
+function removeItem(index){
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  cart.splice(index,1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateMiniCart();
+  renderCartPanel();
+}
+
+/* Bulle animée */
+function flyBubble(button){
+  const rect = button.getBoundingClientRect();
+  const miniCart = document.getElementById('miniCart');
+  const bubble = document.createElement('div');
+  bubble.className='cart-bubble';
+  bubble.textContent='€';
+  document.body.appendChild(bubble);
+
+  bubble.style.left = rect.left + rect.width/2 - 12 + 'px';
+  bubble.style.top = rect.top + rect.height/2 - 12 + 'px';
+
+  const cartRect = miniCart.getBoundingClientRect();
+  const deltaX = cartRect.left + cartRect.width/2 - (rect.left + rect.width/2);
+  const deltaY = cartRect.top + cartRect.height/2 - (rect.top + rect.height/2);
+
+  requestAnimationFrame(()=>{
+    bubble.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.3)`;
+    bubble.style.opacity = '0';
+  });
+
+  setTimeout(()=>bubble.remove(),600);
+}
+
+/* Initialisation */
+window.addEventListener('load',()=>{
+  updateMiniCart();
+  renderCartPanel();
+});
 </script>
 
 </body>
