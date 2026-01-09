@@ -6,7 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body,html{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#f5f5f5;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body,html{font-family:'Roboto',sans-serif;background:#f5f5f5;}
 header{background:#4CAF50;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;}
 header h1{font-size:24px;}
 nav{display:flex;gap:15px;}
@@ -28,16 +29,17 @@ form button{padding:12px;background:#4CAF50;color:white;border:none;border-radiu
 form button:hover{background:#45A049;transform:scale(1.05);}
 .whatsapp-btn{margin-top:20px;display:block;text-align:center;padding:12px;background:#25D366;color:white;border-radius:50px;font-weight:bold;text-decoration:none;}
 footer{margin-top:40px;text-align:center;padding:15px;background:#333;color:white;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;}
 </style>
 </head>
 <body>
+
 <header>
 <h1>DMSERVICESCI</h1>
 <div class="nav-toggle" onclick="toggleNav()"><span></span><span></span><span></span></div>
 <nav id="navMenu">
 <a href="index.html">Accueil</a>
 <a href="produits.html">Produits</a>
-<a href="panier.html">Panier</a>
 <a href="yango.html">Yango</a>
 <a href="contact.html">Contact</a>
 </nav>
@@ -46,17 +48,26 @@ footer{margin-top:40px;text-align:center;padding:15px;background:#333;color:whit
 <main>
 <div class="contact-box">
 <h2>Contactez-nous</h2>
+
 <div class="contact-info">
   <div class="info">📞 <strong>Téléphone</strong><br>+225 05 96 85 57 75</div>
   <div class="info">📧 <strong>Email</strong><br>dmsinfosci@gmail.com</div>
   <div class="info">📍 <strong>Localisation</strong><br>Abidjan, Côte d’Ivoire</div>
 </div>
+
 <form onsubmit="envoyerContact(event)">
+  <label for="nom" class="sr-only">Nom</label>
   <input type="text" id="nom" placeholder="Votre nom" required minlength="2">
+
+  <label for="email" class="sr-only">Email</label>
   <input type="email" id="email" placeholder="Votre email" required>
+
+  <label for="message" class="sr-only">Message</label>
   <textarea id="message" placeholder="Votre message" required minlength="10"></textarea>
+
   <button type="submit">Envoyer le message</button>
 </form>
+
 <a class="whatsapp-btn" href="https://wa.me/2250596855775" target="_blank">💬 Nous écrire sur WhatsApp</a>
 </div>
 </main>
@@ -69,12 +80,14 @@ footer{margin-top:40px;text-align:center;padding:15px;background:#333;color:whit
 function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
 function envoyerContact(e){
   e.preventDefault();
-  const nom=document.getElementById('nom').value;
-  const email=document.getElementById('email').value;
-  const message=document.getElementById('message').value;
-  const texte=`Nom : ${nom}\nEmail : ${email}\nMessage : ${message}`;
-  window.open("https://wa.me/2250596855775?text="+encodeURIComponent(texte), "_blank");
+  const nom = document.getElementById('nom').value;
+  const email = document.getElementById('email').value;
+  const message = document.getElementById('message').value;
+  const texte = `Nom : ${nom}\nEmail : ${email}\nMessage : ${message}`;
+  window.open("https://wa.me/2250596855775?text=" + encodeURIComponent(texte), "_blank");
+  alert("Vous allez être redirigé vers WhatsApp pour envoyer votre message.");
 }
 </script>
+
 </body>
 </html>
