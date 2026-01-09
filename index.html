@@ -11,16 +11,18 @@ body,html{font-family:'Roboto',sans-serif;background:#f5f5f5;}
 header{background:#4CAF50;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;}
 header h1{font-size:24px;}
 nav{display:flex;gap:15px;}
-nav a{color:white;font-weight:600;position:relative;text-decoration:none;}
+nav a{color:white;font-weight:600;text-decoration:none;position:relative;}
 nav a::after{content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:#FFD700;transition:0.3s;}
 nav a:hover::after{width:100%;}
 .nav-toggle{display:none;flex-direction:column;gap:4px;cursor:pointer;}
 .nav-toggle span{width:25px;height:3px;background:white;}
 @media(max-width:768px){nav{position:absolute;top:60px;left:0;right:0;background:#4CAF50;flex-direction:column;display:none;} nav.active{display:flex;} .nav-toggle{display:flex;}}
-main{max-width:900px;margin:40px auto;padding:20px;text-align:center;}
-footer{text-align:center;padding:15px;background:#333;color:white;}
-button{padding:12px 20px;background:#4CAF50;color:white;border:none;border-radius:50px;cursor:pointer;transition:0.3s;}
-button:hover{background:#45A049;transform:scale(1.05);}
+main{max-width:900px;margin:50px auto;padding:20px;text-align:center;}
+main h2{margin-bottom:20px;color:#333;}
+main p{font-size:18px;color:#555;}
+footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30px;}
+button, .btn{padding:12px 20px;background:#4CAF50;color:white;border:none;border-radius:50px;cursor:pointer;transition:0.3s;font-weight:bold;text-decoration:none;}
+button:hover, .btn:hover{background:#45A049;}
 </style>
 </head>
 <body>
@@ -31,16 +33,15 @@ button:hover{background:#45A049;transform:scale(1.05);}
 <nav id="navMenu">
 <a href="index.html">Accueil</a>
 <a href="produits.html">Produits</a>
-<a href="panier.html">Panier</a>
 <a href="yango.html">Yango</a>
 <a href="contact.html">Contact</a>
 </nav>
 </header>
 
 <main>
-<h2>Bienvenue sur DMSERVICESCI</h2>
-<p>Découvrez nos services et produits à Abidjan.</p>
-<a href="produits.html"><button>Voir les produits</button></a>
+<h2>Bienvenue chez DMSERVICESCI</h2>
+<p>Découvrez nos produits et services à Abidjan. Achetez facilement ou contactez-nous via WhatsApp pour toute demande.</p>
+<a href="produits.html" class="btn">Voir nos produits</a>
 </main>
 
 <footer>
