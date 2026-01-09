@@ -5,29 +5,28 @@
 <title>DMSERVICESCI - Panier</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body,html{font-family:'Roboto',sans-serif;background:#f5f5f5;}
 header{background:#4CAF50;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;}
 header h1{font-size:24px;}
 nav{display:flex;gap:15px;}
-nav a{color:white;font-weight:600;position:relative;transition:0.3s;}
+nav a{color:white;font-weight:600;position:relative;text-decoration:none;}
 nav a::after{content:"";position:absolute;width:0;height:2px;bottom:-4px;left:0;background:#FFD700;transition:0.3s;}
 nav a:hover::after{width:100%;}
 .nav-toggle{display:none;flex-direction:column;gap:4px;cursor:pointer;}
-.nav-toggle span{width:25px;height:3px;background:white;display:block;}
+.nav-toggle span{width:25px;height:3px;background:white;}
 @media(max-width:768px){nav{position:absolute;top:60px;left:0;right:0;background:#4CAF50;flex-direction:column;display:none;} nav.active{display:flex;} .nav-toggle{display:flex;}}
 main{max-width:800px;margin:30px auto;padding:0 15px;}
-h2{text-align:center;margin-bottom:20px;}
-ul{list-style:none;}
-li{background:white;padding:10px 15px;margin-bottom:10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center;}
-button{padding:10px 15px;margin:5px;background:#4CAF50;color:white;border:none;border-radius:50px;cursor:pointer;transition:0.3s;}
+ul{list-style:none;padding:0;}
+li{background:white;padding:10px 15px;margin-bottom:10px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+button{padding:5px 10px;background:#4CAF50;color:white;border:none;border-radius:50px;cursor:pointer;transition:0.3s;}
 button:hover{background:#45A049;transform:scale(1.05);}
-#paypal-button-container{margin-top:15px;}
-.delete-btn{background:#FF4C4C;margin-left:10px;}
+.delete-btn{background:#FF4C4C;}
 .delete-btn:hover{background:#E04343;}
+footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30px;}
 </style>
-<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
 </head>
 <body>
 
@@ -46,16 +45,14 @@ button:hover{background:#45A049;transform:scale(1.05);}
 <main>
 <h2>Votre Panier</h2>
 <ul id="panier"></ul>
-<p style="text-align:right;font-weight:bold;">Total : <span id="total">0</span>€</p>
+<p>Total : <span id="total">0</span> CFA</p>
 
-<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;">
+<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;">
 <button onclick="commandeEspece()">Payer en espèces / Livraison</button>
 <button onclick="commanderWhatsApp()">Commander via WhatsApp</button>
-<button onclick="commanderLygos()">Payer avec Lygos</button>
 </div>
 
-<div id="paypal-button-container"></div>
-
+<div id="paypal-button-container" style="margin-top:20px;"></div>
 </main>
 
 <footer>
@@ -65,67 +62,64 @@ button:hover{background:#45A049;transform:scale(1.05);}
 <script>
 function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
 
-// Affichage du panier
+// Afficher le panier
 function afficherPanier(){
-  let panier = JSON.parse(localStorage.getItem('panier') || '[]');
-  let ul = document.getElementById('panier'); 
-  ul.innerHTML = '';
-  let total = 0;
+    let panier = JSON.parse(localStorage.getItem('panier') || '[]');
+    let ul = document.getElementById('panier');
+    ul.innerHTML = '';
+    let total = 0;
 
-  panier.forEach((item,index)=>{
-    let li = document.createElement('li');
+    panier.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.nom} - ${item.prix} CFA`;
 
-    let nomPrix = document.createElement('span');
-    nomPrix.textContent = `${item.nom} - ${Number(item.prix).toFixed(2)}€`;
+        const btnSuppr = document.createElement('button');
+        btnSuppr.textContent = "Supprimer";
+        btnSuppr.className = "delete-btn";
+        btnSuppr.onclick = () => {
+            panier.splice(index,1);
+            localStorage.setItem('panier', JSON.stringify(panier));
+            afficherPanier();
+        };
+        li.appendChild(btnSuppr);
+        ul.appendChild(li);
+        total += Number(item.prix);
+    });
 
-    let delBtn = document.createElement('button');
-    delBtn.textContent = 'Supprimer';
-    delBtn.className = 'delete-btn';
-    delBtn.onclick = () => {
-      panier.splice(index,1);
-      localStorage.setItem('panier',JSON.stringify(panier));
-      afficherPanier();
-    };
-
-    li.appendChild(nomPrix);
-    li.appendChild(delBtn);
-    ul.appendChild(li);
-
-    total += Number(item.prix);
-  });
-
-  document.getElementById('total').textContent = total.toFixed(2);
+    document.getElementById('total').textContent = total;
 }
+
 afficherPanier();
 
 // Commande WhatsApp
 function commanderWhatsApp(){
-  let panier = JSON.parse(localStorage.getItem('panier') || '[]');
-  if(panier.length === 0){alert('Votre panier est vide.'); return;}
-  let total = panier.reduce((a,b)=>a+Number(b.prix),0);
-  let msg = 'Commande :\n'+panier.map(i=>i.nom+' - '+Number(i.prix).toFixed(2)+'€').join('\n')+'\nTotal : '+total.toFixed(2)+'€';
-  window.open('https://wa.me/+2250596855775?text='+encodeURIComponent(msg),'_blank');
+    let panier = JSON.parse(localStorage.getItem('panier') || '[]');
+    if(panier.length === 0){ alert("Votre panier est vide !"); return; }
+    let total = panier.reduce((a,b)=>a+Number(b.prix),0);
+    let msg = "Commande :\n" + panier.map(p=>p.nom+" - "+p.prix+" CFA").join("\n") + "\nTotal : " + total + " CFA";
+    window.open("https://wa.me/2250596855775?text=" + encodeURIComponent(msg), "_blank");
 }
 
-function commandeEspece(){alert('Merci de préparer le paiement en espèces lors de la livraison.');}
-function commanderLygos(){alert('Redirection vers Lygos pour paiement.');}
+// Commande espèces
+function commandeEspece(){ alert("Merci de préparer le paiement en espèces lors de la livraison."); }
 
 // PayPal
 paypal.Buttons({
-  createOrder: function(data, actions){
-    let panier = JSON.parse(localStorage.getItem('panier') || '[]');
-    if(panier.length === 0){alert('Votre panier est vide.'); return;}
-    let total = panier.reduce((a,b)=>a+Number(b.prix),0);
-    return actions.order.create({purchase_units:[{amount:{value:total.toFixed(2)}}]});
-  },
-  onApprove:function(data, actions){
-    return actions.order.capture().then(function(details){
-      alert('Paiement effectué avec succès !');
-      localStorage.removeItem('panier');
-      afficherPanier();
-    });
-  }
+    createOrder:function(data,actions){
+        let panier = JSON.parse(localStorage.getItem('panier') || '[]');
+        if(panier.length === 0){alert('Panier vide !'); return;}
+        let total = panier.reduce((a,b)=>a+Number(b.prix),0);
+        return actions.order.create({purchase_units:[{amount:{value:total.toFixed(2)}}]});
+    },
+    onApprove:function(data,actions){
+        return actions.order.capture().then(function(details){
+            alert("Paiement réussi !");
+            localStorage.removeItem('panier');
+            afficherPanier();
+        });
+    }
 }).render('#paypal-button-container');
 </script>
+
 </body>
 </html>
