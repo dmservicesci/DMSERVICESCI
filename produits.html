@@ -33,7 +33,7 @@ nav{
   display:flex;
   gap:15px;
   position:relative;
-  z-index:10002;
+  z-index:1000;
 }
 nav a{
   color:white;text-decoration:none;font-weight:600;position:relative;
@@ -90,22 +90,40 @@ main{
   border: 2px solid var(--primary);
 }
 
-/* Mini panier fixe */
+/* Mini panier juste sous le header */
 #miniCart{
-  position:fixed;top:20px;right:20px;padding:10px 20px;
-  background:white;border:2px solid var(--primary);border-radius:50px;
-  cursor:pointer;font-weight:bold;color:var(--primary);display:flex;align-items:center;gap:10px;
-  z-index:10003;
+  position:fixed;
+  top:60px; /* juste sous le header */
+  right:20px;
+  padding:10px 20px;
+  background:white;
+  border:2px solid var(--primary);
+  border-radius:50px;
+  cursor:pointer;
+  font-weight:bold;
+  color:var(--primary);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:1001; /* supérieur au header */
   transition:0.3s;
 }
 #miniCart:hover{background:var(--primary);color:white;}
 
 /* Panier glissant */
 #cartPanel{
-  position:fixed;top:0;right:-350px;width:320px;height:100%;background:white;
-  box-shadow:-4px 0 20px rgba(0,0,0,0.2);padding:15px;
-  transition:right 0.3s;display:flex;flex-direction:column;
-  z-index:999;
+  position:fixed;
+  top:0;
+  right:-350px;
+  width:320px;
+  height:100%;
+  background:white;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.2);
+  padding:15px;
+  transition:right 0.3s;
+  display:flex;
+  flex-direction:column;
+  z-index:999; /* sous mini-panier et header */
 }
 #cartPanel.open{right:0;}
 #cartPanel h4{text-align:center;margin-bottom:15px;}
@@ -128,7 +146,7 @@ main{
   justify-content:center;
   font-size:12px;
   pointer-events:none;
-  z-index:10004;
+  z-index:1002;
   transition: transform 0.6s cubic-bezier(0.65,-0.6,0.25,1.4), opacity 0.6s;
 }
 
@@ -191,32 +209,13 @@ function formatPrice(price){
 }
 
 function toggleNav(){
-  const nav = document.getElementById('navMenu');
-  const miniCart = document.getElementById('miniCart');
-
-  nav.classList.toggle('active');
-
-  if(nav.classList.contains('active')){
-    document.getElementById('cartPanel').classList.remove('open');
-    miniCart.style.zIndex = '1000';
-  } else {
-    miniCart.style.zIndex = '10003';
-  }
+  document.getElementById('navMenu').classList.toggle('active');
+  document.getElementById('cartPanel').classList.remove('open');
 }
 
 function toggleCartPanel(){
-  const panel = document.getElementById('cartPanel');
-  const nav = document.getElementById('navMenu');
-  const miniCart = document.getElementById('miniCart');
-
-  panel.classList.toggle('open');
-
-  if(panel.classList.contains('open')){
-    nav.classList.remove('active');
-    miniCart.style.zIndex = '10003';
-  } else if(!nav.classList.contains('active')){
-    miniCart.style.zIndex = '10003';
-  }
+  document.getElementById('cartPanel').classList.toggle('open');
+  document.getElementById('navMenu').classList.remove('active');
 }
 
 function addToCart(name, price){
