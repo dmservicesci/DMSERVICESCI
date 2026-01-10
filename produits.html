@@ -45,6 +45,8 @@ footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30p
 </header>
 
 <main>
+
+<!-- Produit 1 -->
 <div class="card">
   <img src="images/produit1.jpg" alt="Produit 1">
   <h3>Produit 1</h3>
@@ -55,6 +57,7 @@ footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30p
   </div>
 </div>
 
+<!-- Produit 2 -->
 <div class="card">
   <img src="images/produit2.jpg" alt="Produit 2">
   <h3>Produit 2</h3>
@@ -65,6 +68,7 @@ footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30p
   </div>
 </div>
 
+<!-- Produit 3 -->
 <div class="card">
   <img src="images/produit3.jpg" alt="Produit 3">
   <h3>Produit 3</h3>
@@ -74,6 +78,29 @@ footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30p
     <a href="https://wa.me/2250596855775" target="_blank" class="btn btn-whatsapp">WhatsApp Contact</a>
   </div>
 </div>
+
+<!-- Produit 4 (clone identique pour modification facile) -->
+<div class="card">
+  <img src="images/produit4.jpg" alt="Produit 4">
+  <h3>Produit 4</h3>
+  <p>15 000 CFA</p>
+  <div class="btn-group">
+    <a href="#" class="btn" onclick="acheterMaintenant('Produit 4')">Acheter maintenant</a>
+    <a href="https://wa.me/2250596855775" target="_blank" class="btn btn-whatsapp">WhatsApp Contact</a>
+  </div>
+</div>
+
+<!-- Produit 5 (clone identique) -->
+<div class="card">
+  <img src="images/produit5.jpg" alt="Produit 5">
+  <h3>Produit 5</h3>
+  <p>25 000 CFA</p>
+  <div class="btn-group">
+    <a href="#" class="btn" onclick="acheterMaintenant('Produit 5')">Acheter maintenant</a>
+    <a href="https://wa.me/2250596855775" target="_blank" class="btn btn-whatsapp">WhatsApp Contact</a>
+  </div>
+</div>
+
 </main>
 
 <footer>
@@ -82,11 +109,10 @@ footer{text-align:center;padding:15px;background:#333;color:white;margin-top:30p
 
 <script>
 function toggleNav(){document.getElementById('navMenu').classList.toggle('active');}
-
 function acheterMaintenant(produit){
-    alert("Redirection vers paiement pour : " + produit);
+    alert("Redirection vers paiement ou WhatsApp pour : " + produit);
     // Ici tu peux mettre ton lien de paiement réel
-    // Exemple : window.location.href = "https://linktopayment.com";
+    // Exemple : window.location.href = "https://wa.me/2250596855775?text=Commande:"+encodeURIComponent(produit);
 }
 </script>
 
